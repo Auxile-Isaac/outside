@@ -128,12 +128,14 @@ function CreateListing({ categories: initialCategories }) {
   return (
     <div>
       <Head>
-        <Script
-          async
-          defer
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzN9QQjSZRS865tiM5bWwclv1kwngPvh0&libraries=places"
-        ></Script>
+        <title>Create a Listing</title>
+        {/* Other head elements */}
       </Head>
+      <Script
+        async
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzN9QQjSZRS865tiM5bWwclv1kwngPvh0&libraries=places"
+      ></Script>
       <Card color="transparent" shadow={false}>
         <Typography variant="h4" color="blue-gray">
           Create a Listing
@@ -285,7 +287,6 @@ function CreateListing({ categories: initialCategories }) {
               ) : (
                 <p>Loading categories...</p>
               )}
-              {/* ... rest of the form */}
             </Card>
           </div>
           <Checkbox
