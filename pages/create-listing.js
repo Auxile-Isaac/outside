@@ -9,27 +9,25 @@ import {
   Input,
   Button,
   Typography,
-//   Autocomplete,
+  // Autocomplete,
   DateTimePicker,
   TextField,
   Select,
   Menu,
   MenuHandler,
   MenuList,
-//   GoogleMaps,
+  // GoogleMaps,
   MenuItem,
   Textarea
 } from "@material-tailwind/react";
 import { useCountries } from "use-react-countries";
 import { createOrUpdateUser } from '@/lib/utils/createOrUpdateUser';
 
-
-const  CreateListing = () => {
+const CreateListing = () => {
     const { data: session } = useSession();
     const { user } = useUser(); // Access user data
     const [country, setCountry] = useState(''); // Store country name
     const { countries } = useCountries(); // Access countries object
-
 
     const [formData, setFormData] = useState({
       name: '',
@@ -46,17 +44,17 @@ const  CreateListing = () => {
       latitude: null,
       longitude: null,
     });
-  
+
     useEffect(() => {
       if (formData.location) {
         handleLocationSelect(formData.location);
       }
     }, [formData.location]);
-  
+
     const handleLocationSelect = async (place) => {
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
-  
+
       setFormData((prevFormData) => ({
         ...prevFormData,
         location: place.label,
@@ -64,25 +62,25 @@ const  CreateListing = () => {
         longitude,
       }));
     };
-  
+
     const [categories, setCategories] = useState([]);
-  
+
     useEffect(() => {
       async function fetchCategories() {
         const fetchedCategories = await prisma.category.findMany();
         setCategories(fetchedCategories);
       }
-  
+
       fetchCategories();
     }, []);
-  
+
     const categoryOptions = categories.map((category) => ({
       value: category.id,
       label: category.name,
     }));
-  
+
     const [fieldErrors, setFieldErrors] = useState({});
-  
+
     const getFieldErrorMessage = (fieldName, errorCode) => {
       switch (errorCode) {
         case 'required':
@@ -104,10 +102,10 @@ const  CreateListing = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         try {
           const validatedData = listingSchema.parse(formData);
-    
+
           const updatedUser = await createOrUpdateUser(session.user.id, {
             firstName: user.firstName,
             lastName: session.user.lastName,
@@ -116,13 +114,13 @@ const  CreateListing = () => {
             phoneNumber: session.user.phoneNumber,
             image: session.user.image,
           });
-    
+
           formData.host = { connect: { id: updatedUser.id } };
-    
+
           const existingCoordinates = await prisma.coordinates.findFirst({
             where: { latitude: formData.latitude, longitude: formData.longitude },
           });
-    
+
           if (existingCoordinates) {
             formData.coordinatesId = existingCoordinates.id;
           } else {
@@ -135,7 +133,7 @@ const  CreateListing = () => {
             });
             formData.coordinatesId = newCoordinates.id;
           }
-    
+
           const createdListing = await prisma.listing.create({
             data: {
               ...validatedData,
@@ -244,7 +242,7 @@ const  CreateListing = () => {
             {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
             Location
             </Typography>
-            <GoogleMaps apiKey="AIzaSyBzN9QQjSZRS865tiM5bWwclv1kwngPvh0" />
+            <GoogleMaps apiKey="API_KEY" />
             <Autocomplete
             // ... props for Google Places API integration
             placeholder="Enter a location"
@@ -254,7 +252,6 @@ const  CreateListing = () => {
                 componentRestrictions: {
                     country: "RW",
                 },
-            
             }}
             required
             className={`!border-t-blue-gray-200 ${fieldErrors.location ? 'border-red-500' : ''}`} // Apply error styling
@@ -298,7 +295,7 @@ const  CreateListing = () => {
             required
             className={`!border-t-blue-gray-200 ${fieldErrors.price ? 'border-red-500' : ''}`}
             />
-            // Phone number component with dropdown
+            {/* Phone number component with dropdown */}
             <div className="relative flex w-full max-w-[24rem]">
                 <Menu placement="bottom-start">
                     <MenuHandler>
