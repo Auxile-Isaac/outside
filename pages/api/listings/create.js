@@ -1,9 +1,7 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"; // Use the imported prisma instance
 import { getAuth } from '@clerk/nextjs/server';
 import { listingSchema } from "@/lib/validation";
 import { createOrUpdateUser } from './createOrUpdateUser'; // Assuming this function exists
-
-const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   const { clerkUserId } = getAuth(req);
@@ -30,22 +28,21 @@ export default async function handler(req, res) {
     });
 
     // Create listing:
-const listing = await prisma.listing.create({
-    data: {
-      ...validatedData,
-      hostId: updatedUser.id,
-      shortCaption: formData.shortCaption,
-      description: formData.description,
-      price: formData.price,
-      phoneNumber: formData.phoneNumber,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      images: formData.images,
-      categories: formData.categories,
-      coordinatesId,
-    },
-  });
-  
+    const listing = await prisma.listing.create({
+      data: {
+        ...validatedData,
+        hostId: updatedUser.id,
+        shortCaption: validatedData.shortCaption,
+        description: validatedData.description,
+        price: validatedData.price,
+        phoneNumber: validatedData.phoneNumber,
+        startDate: validatedData.startDate,
+        endDate: validatedData.endDate,
+        images: validatedData.images,
+        categories: validatedData.categories,
+        coordinatesId,
+      },
+    });
 
     // Provide feedback on successful listing creation
     res.status(201).json({ message: 'Listing created successfully', listing });
@@ -68,7 +65,7 @@ async function createOrRetrieveCoordinates(coordinates) {
   } else {
     const newCoordinates = await prisma.coordinates.create({
       data: {
-        name: validatedData.location, // Use location as name
+        name: coordinates.location, // Use location as name
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
       },
