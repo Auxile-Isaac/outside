@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Script from 'next/script';
 import {
-    Card,
+  Card,
   Input,
   Checkbox,
   Button,
@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemPrefix,
   Textarea
-  } from "@material-tailwind/react";
+} from "@material-tailwind/react";
 import React, { useState, useEffect } from 'react';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css"; // Import Flatpickr's CSS
@@ -20,11 +20,6 @@ import PlacesAutocomplete, {
   geocodeByPlaceId,
   getLatLng,
 } from 'react-places-autocomplete';
-
-
-
-
-
 import Router from 'next/router';
 
 function LocationSearchInput({ value, onChange, onSelect }) {
@@ -53,97 +48,86 @@ function LocationSearchInput({ value, onChange, onSelect }) {
             })}
           />
           {loading ? (
-  <div>Loading...</div>
-) : (
-  <div className="autocomplete-dropdown-container">
-    {suggestions.map((suggestion) => {
-      const className = suggestion.active
-        ? 'suggestion-item--active'
-        : 'suggestion-item';
-      const style = suggestion.active
-        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-        : { backgroundColor: '#ffffff', cursor: 'pointer' };
-      return (
-        <div
-          {...getSuggestionItemProps(suggestion, {
-            className,
-            style,
-          })}
-        >
-          <span>{suggestion.description}</span>
-        </div>
-      );
-    })}
-  </div>
-)}
-
+            <div>Loading...</div>
+          ) : (
+            <div className="autocomplete-dropdown-container">
+              {suggestions.map((suggestion) => {
+                const className = suggestion.active
+                  ? 'suggestion-item--active'
+                  : 'suggestion-item';
+                const style = suggestion.active
+                  ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                  : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                return (
+                  <div
+                    key={suggestion.placeId} // Ensure key prop is provided here
+                    {...getSuggestionItemProps(suggestion, {
+                      className,
+                      style,
+                    })}
+                  >
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </PlacesAutocomplete>
   );
 }
 
-
-
-   
-  function CreateListing({ categories: initialCategories }) {
-    const [name, setName] = useState('');
-    const [shortCaption, setShortCaption] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const startDateRef = React.createRef(); // Create a ref for the input
-    const [endDate, setEndDate] = useState('');
-    const endDateRef = React.createRef();
-     const [location, setLocation] = useState('');
+function CreateListing({ categories: initialCategories }) {
+  const [name, setName] = useState('');
+  const [shortCaption, setShortCaption] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const startDateRef = React.createRef(); // Create a ref for the input
+  const [endDate, setEndDate] = useState('');
+  const endDateRef = React.createRef();
+  const [location, setLocation] = useState('');
   const [selectedLocation, setSelectedLocation] = useState({}); // to store selected location details
+  const [images, setImages] = useState('');
+  const [categories, setCategories] = useState(initialCategories);
 
-    const [images, setImages] = useState('');
-    const [categories, setCategories] = useState(initialCategories);
+  useEffect(() => {
+    // Initialize Flatpickr on component mount
+    flatpickr(startDateRef.current, {
+      enableTime: true,  // Enable time selection
+      dateFormat: "Y-m-d H:i", // Set desired date and time format
+      time_24hr: true,  // Use 24-hour format
+      allowInput: true,  // Allow manual input
+      theme: "material_blue",  // Apply Material Design theme
+    });
+    flatpickr(endDateRef.current, {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: true,
+      allowInput: true,
+      theme: "material_blue",
+    });
+  }, []);
 
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
 
-    
-
-
-
-    useEffect(() => {
-        // Initialize Flatpickr on component mount
-        flatpickr(startDateRef.current, {
-          enableTime: true,  // Enable time selection
-          dateFormat: "Y-m-d H:i", // Set desired date and time format
-          time_24hr: true,  // Use 24-hour format
-          allowInput: true,  // Allow manual input
-          theme: "material_blue",  // Apply Material Design theme
-        });
-        flatpickr(endDateRef.current, {
-          enableTime: true,
-          dateFormat: "Y-m-d H:i",
-          time_24hr: true,
-          allowInput: true,
-          theme: "material_blue",
-        });
-      }, []); 
-
-
-    const categoryOptions = categories.map((category) => ({
-      value: category.id,
-      label: category.name,
-    }));
-
-    const handleLocationSelect = (selectedLocation) => {
+  const handleLocationSelect = (selectedLocation) => {
     setLocation(selectedLocation.address);
     setSelectedLocation(selectedLocation);
   };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // ... handle form submission logic (fetch, API calls, etc.)
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // ... handle form submission logic (fetch, API calls, etc.)
+  };
 
-      
-    return (
-      <div>
-        <Head>
+  return (
+    <div>
+      <Head>
         <Script
           async
           defer
@@ -199,9 +183,9 @@ function LocationSearchInput({ value, onChange, onSelect }) {
               onChange={(e) => setStartDate(e.target.value)}
               required
               className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-             />
+            />
             <Typography variant="h6" color="blue-gray" className="-mb-3">
-               End Date
+              End Date
             </Typography>
             <input
               ref={endDateRef}
@@ -212,7 +196,7 @@ function LocationSearchInput({ value, onChange, onSelect }) {
               className="!border-t-blue-gray-200 focus:!border-t-gray-900"
             />
             <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Upload Images
+              Upload Images
             </Typography>
             <Input
               size="lg"
@@ -239,75 +223,70 @@ function LocationSearchInput({ value, onChange, onSelect }) {
               }}
             />
             <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Location
-          </Typography>
-          <LocationSearchInput
-            value={location}
-            onChange={(e) => setLocation(e)}
-            onSelect={handleLocationSelect}
-          />
+              Location
+            </Typography>
+            <LocationSearchInput
+              value={location}
+              onChange={(e) => setLocation(e)}
+              onSelect={handleLocationSelect}
+            />
             <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Long Description
+              Long Description
             </Typography>
             <Textarea
               size="lg"
               rows={4} // Adjust the number of rows as needed
               value={description}
-             onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               required
               className="!border-t-blue-gray-200 focus:!border-t-gray-900"
             />
-
-           <Card color="transparent" shadow={false}>
-      {/* ... other card content */}
-      {categories.length > 0 ? (
-        <div className="mb-1 flex flex-col gap-6">
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Categories
-          </Typography>
-          <Card>
-            <List>
-              {categories.map((category) => (
-                <ListItem key={category.id} className="p-0">
-                  <label
-                    htmlFor={`category-${category.id}`}
-                    className="flex w-full cursor-pointer items-center px-3 py-2"
-                  >
-                    <ListItemPrefix className="mr-3">
-                      <Checkbox
-                        id={`category-${category.id}`}
-                        ripple={false}
-                        className="hover:before:opacity-0"
-                        containerProps={{ className: "p-0" }}
-                        checked={categories.includes(category.id)}
-                        onChange={() =>
-                          setCategories((prevCategories) =>
-                            prevCategories.includes(category.id)
-                              ? prevCategories.filter(
-                                  (id) => id !== category.id
-                                )
-                              : [...prevCategories, category.id]
-                          )
-                        }
-                      />
-                    </ListItemPrefix>
-                    <Typography color="blue-gray" className="font-medium">
-                      {category.name}
-                    </Typography>
-                  </label>
-                </ListItem>
-              ))}
-            </List>
-          </Card>
-        </div>
-      ) : (
-        <p>Loading categories...</p>
-      )}
-      {/* ... rest of the form */}
-    </Card>
-
-
-              
+            <Card color="transparent" shadow={false}>
+              {categories.length > 0 ? (
+                <div className="mb-1 flex flex-col gap-6">
+                  <Typography variant="h6" color="blue-gray" className="-mb-3">
+                    Categories
+                  </Typography>
+                  <Card>
+                    <List>
+                      {categories.map((category) => (
+                        <ListItem key={category.id} className="p-0">
+                          <label
+                            htmlFor={`category-${category.id}`}
+                            className="flex w-full cursor-pointer items-center px-3 py-2"
+                          >
+                            <ListItemPrefix className="mr-3">
+                              <Checkbox
+                                id={`category-${category.id}`}
+                                ripple={false}
+                                className="hover:before:opacity-0"
+                                containerProps={{ className: "p-0" }}
+                                checked={categories.includes(category.id)}
+                                onChange={() =>
+                                  setCategories((prevCategories) =>
+                                    prevCategories.includes(category.id)
+                                      ? prevCategories.filter(
+                                          (id) => id !== category.id
+                                        )
+                                      : [...prevCategories, category.id]
+                                  )
+                                }
+                              />
+                            </ListItemPrefix>
+                            <Typography color="blue-gray" className="font-medium">
+                              {category.name}
+                            </Typography>
+                          </label>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Card>
+                </div>
+              ) : (
+                <p>Loading categories...</p>
+              )}
+              {/* ... rest of the form */}
+            </Card>
           </div>
           <Checkbox
             label={
@@ -330,15 +309,13 @@ function LocationSearchInput({ value, onChange, onSelect }) {
           <Button className="mt-6" fullWidth>
             Submit
           </Button>
-          
         </form>
       </Card>
+    </div>
+  );
+}
 
-      </div>
-       
-    );
-  }
-  export async function getStaticProps() {
+export async function getStaticProps() {
   const categories = await prisma.category.findMany({
     select: { id: true, name: true },
   });
@@ -350,5 +327,4 @@ function LocationSearchInput({ value, onChange, onSelect }) {
   };
 }
 
-
-  export default CreateListing;
+export default CreateListing;
