@@ -88,7 +88,7 @@ function TestimonialBlock() {
                 </CardHeader>
                 <CardBody className="p-4">
                   <Typography variant="body2" color="text-gray-700">
-                  Listing my art, culture, and design space on Outside in Rwanda's platform was a breeze, and the exposure my venue gained was phenomenal, attracting a diverse range of creative events and people; their commitment to promoting local creativity is commendable.
+                  Listing my art, culture, and design space on Outside in Rwanda&apos;s platform was a breeze, and the exposure my venue gained was phenomenal, attracting a diverse range of creative events and people; their commitment to promoting local creativity is commendable.
                   </Typography>
                 </CardBody>
               </Card>
